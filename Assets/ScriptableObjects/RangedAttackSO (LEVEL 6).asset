@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d48361c83e959f349ba314c7d28d5b29, type: 3}
+  m_Name: RangedAttackSO (LEVEL 6)
+  m_EditorClassIdentifier: 
+  size: 1
+  delay: 0
+  power: 60
+  speed: 60
+  target:
+    serializedVersion: 2
+    m_Bits: 8
+  bulletNameTag: Level 6
+  duration: 10
+  numberofProjectilesPerShot: 3
+  multipleProjectilesAngle: 3
+  level: 6
+  upgradeCost: 10000000
+  equipequippedProjectilePrefab: {fileID: 3787772671017879594, guid: 0489f1ea9e652ef41a9bb5345f548bac, type: 3}
