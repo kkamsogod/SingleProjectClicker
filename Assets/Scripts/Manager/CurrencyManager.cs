@@ -8,8 +8,8 @@ public class CurrencyManager : Singleton<CurrencyManager>
 
     private void Start()
     {
-        coinBalance = 100000000;
-        uniqueCoinBalance = 100000000;
+        coinBalance = 1000000000000;
+        uniqueCoinBalance = 0;
     }
 
     public void AddCoins(BigInteger amount)
@@ -39,7 +39,6 @@ public class CurrencyManager : Singleton<CurrencyManager>
         Debug.Log("유니크 조각 추가됨: " + amount + ", 현재 유니크 조각 잔액: " + uniqueCoinBalance);
     }
 
-    // 유니크 조각 감소 메서드
     public bool SpendUniqueCoins(BigInteger amount)
     {
         if (uniqueCoinBalance >= amount)
@@ -55,13 +54,11 @@ public class CurrencyManager : Singleton<CurrencyManager>
         }
     }
 
-    // 현재 코인 잔액 조회
     public BigInteger GetCoinBalance()
     {
         return coinBalance;
     }
 
-    // 현재 유니크 조각 잔액 조회
     public BigInteger GetUniqueCoinBalance()
     {
         return uniqueCoinBalance;

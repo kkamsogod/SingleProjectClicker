@@ -1,17 +1,10 @@
 ﻿using UnityEngine;
 
-public enum StatsChangeType
-{
-    Add,
-    Multiple,
-    Override
-}
-
 [System.Serializable]
 public class CharacterStat
 {
-    public StatsChangeType statsChangeType;
-    [Range(0, 100)] public int maxHealth;
-    [Range(0f, 20f)] public float speed;
-    public DefaultAttackSO defaultAttackSO;
+    public float basePower;
+    public float baseAttackSpeed;
+    public float maxHealth;
+    public float currentHealth;
 }

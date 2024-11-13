@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public Player player;
+    public Monster monster;
     private GameObject inGameObject;
 
     public event Action OnGameStart;
@@ -11,10 +12,11 @@ public class GameManager : Singleton<GameManager>
     public event Action OnGameResume;
     public event Action OnGameRestart;
     public event Action OnGameQuit;
+    public event Action OnMonsterSpawned;
 
     private bool isGamePaused = false;
 
-    private void Awake()
+    private void Start()
     {
         InitializeGame();
     }
@@ -63,5 +65,12 @@ public class GameManager : Singleton<GameManager>
     {
         OnGameQuit?.Invoke();
         Application.Quit();
+    }
+
+    public void NotifyMonsterSpawned(Monster spawnedMonster)
+    {
+        monster = spawnedMonster;
+        OnMonsterSpawned?.Invoke();
+        Debug.Log("[GameManager] Monster spawned and event triggered.");
     }
 }

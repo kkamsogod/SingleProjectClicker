@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Numerics;
 
 [System.Serializable]
 public class RangedAttackRuntimeData
@@ -13,8 +14,9 @@ public class RangedAttackRuntimeData
     public int numberofProjectilesPerShot;
     public float multipleProjectilesAngle;
     public int level;
-    public int upgradeCost;
-    public GameObject equipequippedProjectilePrefab;
+    public float duration;
+    public BigInteger upgradeCost;
+    public GameObject equippedProjectilePrefab;
 
     public RangedAttackRuntimeData(RangedAttackSO rangedData)
     {
@@ -26,8 +28,8 @@ public class RangedAttackRuntimeData
         bulletNameTag = rangedData.bulletNameTag;
         numberofProjectilesPerShot = rangedData.numberofProjectilesPerShot;
         multipleProjectilesAngle = rangedData.multipleProjectilesAngle;
-        level = rangedData.level;
+        duration = rangedData.duration;
         upgradeCost = rangedData.upgradeCost;
-        equipequippedProjectilePrefab = rangedData.equipequippedProjectilePrefab;
+        equippedProjectilePrefab = rangedData.equippedProjectilePrefab;
     }
 }

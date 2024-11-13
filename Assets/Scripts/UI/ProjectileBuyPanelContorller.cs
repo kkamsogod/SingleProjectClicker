@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
+using System.Numerics;
 
-public class ProjectileBuyPanelContorller : MonoBehaviour
+public class ProjectileBuyPanelController : MonoBehaviour
 {
     [SerializeField] private List<RangedAttackSO> upgradeItems;
     [SerializeField] private TextMeshProUGUI upgradeInfoText;
@@ -11,15 +13,12 @@ public class ProjectileBuyPanelContorller : MonoBehaviour
     [SerializeField] private Button cancelButton;
 
     private int currentUpgradeIndex = 1;
-    private ProjectileAttack playerProjectileAttack;
+    private bool isAnimating = false;
 
     private void Start()
     {
-        playerProjectileAttack = GameManager.Instance.player.projectileAttack;
-
         purchaseButton.onClick.AddListener(PurchaseUpgrade);
         cancelButton.onClick.AddListener(ClosePanel);
-
         UpdateUI();
     }
 
@@ -28,8 +27,8 @@ public class ProjectileBuyPanelContorller : MonoBehaviour
         if (currentUpgradeIndex < upgradeItems.Count)
         {
             RangedAttackSO currentUpgrade = upgradeItems[currentUpgradeIndex];
-            string formattedCost = FormatNumber(currentUpgrade.upgradeCost);
-            upgradeInfoText.text = $"{currentUpgrade.level} 단계\n{formattedCost} 코인";
+            string formattedCost = FormatCurrency(currentUpgrade.upgradeCost);
+            upgradeInfoText.text = $"{currentUpgradeIndex} 단계\n{formattedCost} 코인";
         }
         else
         {
@@ -38,14 +37,22 @@ public class ProjectileBuyPanelContorller : MonoBehaviour
         }
     }
 
-    private string FormatNumber(int number)
+    private string FormatCurrency(BigInteger amount)
     {
-        if (number >= 100000000)
-            return $"{number / 100000000}억";
-        else if (number >= 10000)
-            return $"{number / 10000}만";
-        else
-            return number.ToString();
+        if (amount < 1000)
+            return amount.ToString();
+
+        string[] units = { "", "K", "M", "B", "T", "A", "B", "C", "D", "E", "F", "G" };
+        int unitIndex = 0;
+        BigInteger divisor = new BigInteger(1000);
+
+        while (amount >= divisor && unitIndex < units.Length - 1)
+        {
+            amount /= 1000;
+            unitIndex++;
+        }
+
+        return string.Format("{0:F1}{1}", (double)amount, units[unitIndex]);
     }
 
     public void OpenPanel()
@@ -60,17 +67,15 @@ public class ProjectileBuyPanelContorller : MonoBehaviour
 
     private void PurchaseUpgrade()
     {
+        if (isAnimating) return;
+
         if (currentUpgradeIndex < upgradeItems.Count)
         {
             RangedAttackSO nextUpgrade = upgradeItems[currentUpgradeIndex];
 
             if (CurrencyManager.Instance.SpendCoins(nextUpgrade.upgradeCost))
             {
-                if (playerProjectileAttack != null)
-                {
-                    playerProjectileAttack.UpgradeAttack(nextUpgrade);
-                }
-
+                ProjectileManager.Instance.UpgradeProjectile(nextUpgrade);
                 currentUpgradeIndex++;
                 UpdateUI();
                 Debug.Log("구매 완료! 남은 돈: " + CurrencyManager.Instance.GetCoinBalance());
@@ -78,7 +83,37 @@ public class ProjectileBuyPanelContorller : MonoBehaviour
             else
             {
                 Debug.Log("돈이 부족합니다.");
+                StartCoroutine(PlayInsufficientFundsAnimation());
             }
         }
+    }
+
+    private IEnumerator PlayInsufficientFundsAnimation()
+    {
+        isAnimating = true;
+
+        Color originalColor = purchaseButton.GetComponent<Image>().color;
+        UnityEngine.Vector3 originalPosition = purchaseButton.transform.position;
+        string originalText = upgradeInfoText.text;
+
+        purchaseButton.GetComponent<Image>().color = Color.red;
+        upgradeInfoText.text = "코인이\n부족합니다.";
+
+        float shakeDuration = 0.5f;
+        float shakeAmount = 5f;
+        float elapsed = 0f;
+
+        while (elapsed < shakeDuration)
+        {
+            purchaseButton.transform.position = originalPosition + UnityEngine.Vector3.right * Mathf.Sin(elapsed * 50) * shakeAmount;
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        purchaseButton.transform.position = originalPosition;
+        purchaseButton.GetComponent<Image>().color = originalColor;
+        upgradeInfoText.text = originalText;
+
+        isAnimating = false;
     }
 }

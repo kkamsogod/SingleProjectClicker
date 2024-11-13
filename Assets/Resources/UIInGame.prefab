@@ -2733,7 +2733,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buyButton: {fileID: 6700824322054794577}
   cancelButton: {fileID: 403030835295561787}
-  itemPrice: 100
+  attackSpeedIncrease: 0.2
+  maxClickCount: 50
+  upgradeInfoText: {fileID: 408759320459719167}
 --- !u!1 &3013678513847982490
 GameObject:
   m_ObjectHideFlags: 0
@@ -2912,6 +2914,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8737399737804827221}
+  - component: {fileID: 556685746342995720}
   m_Layer: 5
   m_Name: HpBar
   m_TagString: Untagged
@@ -2940,6 +2943,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &556685746342995720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3071021782150095766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4846ac8f1a7263e419937420708838da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHealthSlider: {fileID: 8439482503915582675}
+  monsterHealthSlider: {fileID: 7160833797880796310}
 --- !u!1 &3084217377794229654
 GameObject:
   m_ObjectHideFlags: 0
@@ -8384,7 +8401,7 @@ MonoBehaviour:
   buyButton: {fileID: 6899784011717793929}
   cancelButton: {fileID: 6737536520544955925}
   autoClickPrice: 100
-  clickInterval: 0.5
+  clickInterval: 2
   projectileAttack: {fileID: 0}
   animationController: {fileID: 0}
 --- !u!1 &8088683832223317953

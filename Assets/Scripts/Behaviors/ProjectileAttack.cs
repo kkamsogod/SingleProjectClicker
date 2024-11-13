@@ -1,36 +1,19 @@
 using UnityEngine;
 using System.Collections;
-using System;
 
 public class ProjectileAttack : MonoBehaviour
 {
-    [SerializeField] private RangedAttackSO rangedAttackData;
-    private RangedAttackRuntimeData attackData;
+    private CharacterStatHandler characterStatHandler;
+    private PlayerAnimationController animationController;
     [SerializeField] private Transform firePoint;
     private bool canAttack = true;
-    private float delayReduction = 0f;
-
-    private PlayerAnimationController animationController;
 
     private void Start()
     {
-        attackData = new RangedAttackRuntimeData(rangedAttackData);
+        characterStatHandler = GameManager.Instance.player.characterStatHandler;
+        animationController = GameManager.Instance.player.playerAnimationController;
 
-        animationController = GetComponent<PlayerAnimationController>();
-
-        var player = GetComponent<Player>();
-        if (player != null)
-        {
-            player.OnAttack += TryFire;
-        }
-
-        ResetData();
-    }
-
-    private void ResetData()
-    {
-        delayReduction = 0f;
-        attackData.delay = rangedAttackData.delay;
+        GameManager.Instance.player.OnAttack += TryFire;
     }
 
     public void TryFire()
@@ -45,10 +28,16 @@ public class ProjectileAttack : MonoBehaviour
 
     public void Fire()
     {
-        if (attackData == null || firePoint == null)
+        if (characterStatHandler == null || firePoint == null) return;
+
+        var attackData = ProjectileManager.Instance.GetCurrentProjectileData();
+        if (attackData == null)
         {
+            Debug.LogError("Attack data is null.");
             return;
         }
+
+        Debug.Log($"Attempting to fire: BulletTag={attackData.bulletNameTag}, Projectiles={attackData.numberofProjectilesPerShot}");
 
         for (int i = 0; i < attackData.numberofProjectilesPerShot; i++)
         {
@@ -60,12 +49,15 @@ public class ProjectileAttack : MonoBehaviour
             if (projectile != null)
             {
                 projectile.GetComponent<ProjectileHandler>().Initialize(attackData);
-
                 Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
                 if (rb != null)
                 {
                     rb.velocity = rotation * Vector2.right * attackData.speed;
                 }
+            }
+            else
+            {
+                Debug.LogError($"Failed to load projectile prefab with tag: {attackData.bulletNameTag}");
             }
         }
     }
@@ -73,22 +65,12 @@ public class ProjectileAttack : MonoBehaviour
     private IEnumerator AttackCooldown()
     {
         canAttack = false;
-        yield return new WaitForSeconds(attackData.delay);
+        yield return new WaitForSeconds(characterStatHandler.FinalAttackSpeed);
         canAttack = true;
-    }
-
-    public void UpgradeAttack(RangedAttackSO newAttackData)
-    {
-        if (newAttackData != null)
-        {
-            attackData = new RangedAttackRuntimeData(newAttackData);
-            attackData.delay = Mathf.Max(attackData.delay - delayReduction, 0.1f);
-        }
     }
 
     public void UpgradeAttackSpeed(float speedIncrease)
     {
-        delayReduction += speedIncrease;
-        attackData.delay = Mathf.Max(attackData.delay - speedIncrease, 0.1f);
+        characterStatHandler.UpgradeAttackSpeed(speedIncrease);
     }
 }

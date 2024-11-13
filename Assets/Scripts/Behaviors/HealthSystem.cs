@@ -1,25 +1,32 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField] private float healthChangeDelay = 0.5f;
-    [SerializeField] private AudioClip damageClip;
-
     private CharacterStatHandler statHandler;
     private float timeSinceLastChange = float.MaxValue;
     private bool isAttacked = false;
+    private BigInteger coinReward;
 
     public event Action OnDamage;
     public event Action OnHeal;
     public event Action OnDeath;
     public event Action OnInvincibilityEnd;
+    public event Action OnHealthChanged;
 
-    public float CurrentHealth { get; private set; }
+    public float CurrentHealth
+    {
+        get => statHandler.playerStat.currentHealth;
+        private set => statHandler.playerStat.currentHealth = Mathf.Clamp(value, 0, MaxHealth);
+    }
 
-    public float MaxHealth => statHandler.CurrentStat.maxHealth;
+    public float MaxHealth
+    {
+        get => statHandler.playerStat.maxHealth;
+        private set => statHandler.playerStat.maxHealth = value;
+    }
 
     private void Awake()
     {
@@ -28,8 +35,9 @@ public class HealthSystem : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("MaxHealth at Start: " + MaxHealth);
+        MaxHealth = statHandler.playerStat.maxHealth;
         CurrentHealth = MaxHealth;
+        OnDeath += HandleDeath;
     }
 
     private void Update()
@@ -47,20 +55,23 @@ public class HealthSystem : MonoBehaviour
 
     public bool ChangeHealth(float change)
     {
-        if (CurrentHealth == 0)
+        if (CurrentHealth <= 0)
         {
             return false;
         }
 
         CurrentHealth += change;
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+        OnHealthChanged?.Invoke();
 
         if (CurrentHealth <= 0f)
         {
+            CurrentHealth = 0;
+            OnHealthChanged?.Invoke();
             OnDeath?.Invoke();
             return true;
         }
-        if (change >= 0)
+
+        if (change > 0)
         {
             OnHeal?.Invoke();
         }
@@ -71,5 +82,35 @@ public class HealthSystem : MonoBehaviour
         }
 
         return true;
+    }
+
+    public void SetMaxHealthMultiplier(float multiplier)
+    {
+        MaxHealth *= multiplier;
+        CurrentHealth = MaxHealth;
+        Debug.Log($"[HealthSystem] Updated MaxHealth: {MaxHealth} (Multiplier: {multiplier})");
+        OnHealthChanged?.Invoke();
+    }
+
+    public void InitializeCurrentHealth()
+    {
+        CurrentHealth = MaxHealth;
+        Debug.Log($"[HealthSystem] Initialized CurrentHealth to MaxHealth: {CurrentHealth}");
+    }
+
+    public void SetCoinReward(BigInteger reward)
+    {
+        coinReward = reward;
+    }
+
+    private void HandleDeath()
+    {
+        if (CurrencyManager.Instance != null)
+        {
+            CurrencyManager.Instance.AddCoins(coinReward);
+            Debug.Log($"[HealthSystem] 코인 지급 완료: {coinReward}");
+        }
+
+        Destroy(gameObject);
     }
 }

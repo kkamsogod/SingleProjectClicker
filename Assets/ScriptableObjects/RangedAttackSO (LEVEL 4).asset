@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d48361c83e959f349ba314c7d28d5b29, type: 3}
   m_Name: RangedAttackSO (LEVEL 4)
   m_EditorClassIdentifier: 
-  size: 1
-  delay: 0.7
+  size: 1.3
+  delay: 1.4
   power: 40
   speed: 40
   target:
@@ -22,6 +22,6 @@ MonoBehaviour:
   bulletNameTag: Level 4
   numberofProjectilesPerShot: 2
   multipleProjectilesAngle: 3
-  level: 4
-  upgradeCost: 1000000
-  equipequippedProjectilePrefab: {fileID: 3787772671017879594, guid: 900ee0282ee399b469a20b198875823d, type: 3}
+  duration: 5
+  upgradeCostString: 10000000000
+  equippedProjectilePrefab: {fileID: 3787772671017879594, guid: 900ee0282ee399b469a20b198875823d, type: 3}
