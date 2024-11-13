@@ -13,16 +13,15 @@ MonoBehaviour:
   m_Name: RangedAttackSO (LEVEL 1)
   m_EditorClassIdentifier: 
   size: 1
-  delay: 0
+  delay: 1
   power: 10
   speed: 10
   target:
     serializedVersion: 2
     m_Bits: 8
   bulletNameTag: Level 1
-  duration: 10
   numberofProjectilesPerShot: 1
   multipleProjectilesAngle: 1
   level: 1
-  upgradeCost: 1
+  upgradeCost: 0
   equipequippedProjectilePrefab: {fileID: 3787772671017879594, guid: 55bdca65c456d8649a480e5e8ea6e248, type: 3}

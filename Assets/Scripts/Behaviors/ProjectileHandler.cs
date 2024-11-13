@@ -7,7 +7,7 @@ public class ProjectileHandler : MonoBehaviour
     private float speed;
     private LayerMask targetLayer;
 
-    public void Initialize(RangedAttackSO attackSO)
+    public void Initialize(RangedAttackRuntimeData attackSO)
     {
         power = attackSO.power;
         size = attackSO.size;

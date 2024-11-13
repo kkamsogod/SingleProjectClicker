@@ -28,13 +28,24 @@ public class ProjectileBuyPanelContorller : MonoBehaviour
         if (currentUpgradeIndex < upgradeItems.Count)
         {
             RangedAttackSO currentUpgrade = upgradeItems[currentUpgradeIndex];
-            upgradeInfoText.text = $"{currentUpgrade.level} 단계\n{currentUpgrade.upgradeCost} 코인";
+            string formattedCost = FormatNumber(currentUpgrade.upgradeCost);
+            upgradeInfoText.text = $"{currentUpgrade.level} 단계\n{formattedCost} 코인";
         }
         else
         {
             upgradeInfoText.text = "최대 단계";
             purchaseButton.interactable = false;
         }
+    }
+
+    private string FormatNumber(int number)
+    {
+        if (number >= 100000000)
+            return $"{number / 100000000}억";
+        else if (number >= 10000)
+            return $"{number / 10000}만";
+        else
+            return number.ToString();
     }
 
     public void OpenPanel()

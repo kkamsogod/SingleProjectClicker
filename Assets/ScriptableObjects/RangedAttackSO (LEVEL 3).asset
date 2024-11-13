@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: RangedAttackSO (LEVEL 3)
   m_EditorClassIdentifier: 
   size: 1
-  delay: 0
+  delay: 0.8
   power: 30
   speed: 30
   target:
     serializedVersion: 2
     m_Bits: 8
   bulletNameTag: Level 3
-  duration: 10
   numberofProjectilesPerShot: 2
   multipleProjectilesAngle: 3
   level: 3

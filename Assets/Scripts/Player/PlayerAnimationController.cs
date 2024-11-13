@@ -7,12 +7,6 @@ public class PlayerAnimationController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-
-        var player = GetComponent<Player>();
-        if (player != null)
-        {
-            player.OnAttack += TriggerAttackAnimation;
-        }
     }
 
     void Update()
