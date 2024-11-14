@@ -5,57 +5,72 @@ public class UIPanelController : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject storePanel;
 
-    private bool isPausePanelActive = false;
-    private bool isStorePanelActive = false;
-
     private void Awake()
     {
         pausePanel.SetActive(false);
         storePanel.SetActive(false);
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (UIManager.Instance.IsAnyPanelOpen() && !pausePanel.activeSelf) return;
+
             TogglePausePanel();
         }
     }
 
     public void TogglePausePanel()
     {
-        if (isStorePanelActive) return;
+        if (storePanel.activeSelf || (UIManager.Instance.IsAnyPanelOpen() && !pausePanel.activeSelf)) return;
 
-        isPausePanelActive = !isPausePanelActive;
+        bool isCurrentlyActive = pausePanel.activeSelf;
 
-        if (isPausePanelActive)
-        {
-            UIManager.Instance.Show(pausePanel);
-            OnPause();
-        }
-        else
+        if (isCurrentlyActive)
         {
             UIManager.Instance.Hide(pausePanel);
             OnResume();
+        }
+        else
+        {
+            UIManager.Instance.Show(pausePanel);
+            OnPause();
         }
     }
 
     public void ToggleShopPanel()
     {
-        if (isPausePanelActive) return;
+        if (pausePanel.activeSelf) return;
 
-        isStorePanelActive = !isStorePanelActive;
+        bool isCurrentlyActive = storePanel.activeSelf;
 
-        if (isStorePanelActive)
-        {
-            UIManager.Instance.Show(storePanel);
-            OnOpenShop();
-        }
-        else
+        if (isCurrentlyActive)
         {
             UIManager.Instance.Hide(storePanel);
             OnCloseShop();
         }
+        else
+        {
+            UIManager.Instance.Show(storePanel);
+            OnOpenShop();
+        }
+    }
+
+    public void ResumeGame()
+    {
+        TogglePausePanel();
+    }
+
+    public void RestartGame()
+    {
+        GameManager.Instance.RestartGame();
+        UIManager.Instance.Hide(pausePanel);
+    }
+
+    public void QuitGame()
+    {
+        GameManager.Instance.QuitGame();
     }
 
     private void OnPause()

@@ -8,7 +8,7 @@ public class CurrencyManager : Singleton<CurrencyManager>
 
     private void Start()
     {
-        coinBalance = 0;
+        coinBalance = 10000000000000000;
         uniqueCoinBalance = 0;
     }
 

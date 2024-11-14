@@ -9,7 +9,7 @@ public class AutoClickController : MonoBehaviour
     [SerializeField] private GameObject purchasePanel;
     [SerializeField] private Button buyButton;
     [SerializeField] private Button cancelButton;
-    [SerializeField] private long autoClickPrice = 100000000;
+    [SerializeField] private long autoClickPrice = 1000000000;
     [SerializeField] private float clickInterval = 0.5f;
     [SerializeField] private TextMeshProUGUI purchaseText;
 

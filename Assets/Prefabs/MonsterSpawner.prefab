@@ -51,3 +51,4 @@ MonoBehaviour:
   coinMultiplier: 1.5
   initialCoinRewardString: 100000
   sizeMultiplier: 1.03
+  uniqueCoinRewardChance: 0.1

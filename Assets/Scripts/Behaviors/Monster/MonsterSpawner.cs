@@ -11,18 +11,27 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] private float coinMultiplier = 1.5f;
     [SerializeField] private string initialCoinRewardString = "10";
     [SerializeField] private float sizeMultiplier;
+    [SerializeField] private float uniqueCoinRewardChance = 0.05f;
 
     private BigInteger initialCoinReward;
-    private float currentHealthMultiplier = 1.0f;
+    private float currentHealthMultiplier;
     private BigInteger currentCoinReward;
+    private float monsterOriginalScale;
     private bool isFirstMonsterSpawned = false;
-    private float monsterOriginalScale = 1;
 
     private void Start()
     {
         initialCoinReward = BigInteger.Parse(initialCoinRewardString);
-        currentCoinReward = initialCoinReward;
+        ResetSpawner();
         SpawnInitialMonster();
+    }
+
+    public void ResetSpawner()
+    {
+        currentHealthMultiplier = 1.0f;
+        currentCoinReward = initialCoinReward;
+        monsterOriginalScale = 1.0f;
+        isFirstMonsterSpawned = false;
     }
 
     private void SpawnInitialMonster()
@@ -53,6 +62,12 @@ public class MonsterSpawner : MonoBehaviour
                 {
                     isFirstMonsterSpawned = true;
                 }
+
+                if (UnityEngine.Random.value < uniqueCoinRewardChance)
+                {
+                    CurrencyManager.Instance.AddUniqueCoins(1);
+                }
+
                 StartCoroutine(RespawnWithDelay());
                 IncreaseRewardAndHealth();
             };
