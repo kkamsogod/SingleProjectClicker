@@ -88,14 +88,12 @@ public class HealthSystem : MonoBehaviour
     {
         MaxHealth *= multiplier;
         CurrentHealth = MaxHealth;
-        Debug.Log($"[HealthSystem] Updated MaxHealth: {MaxHealth} (Multiplier: {multiplier})");
         OnHealthChanged?.Invoke();
     }
 
     public void InitializeCurrentHealth()
     {
         CurrentHealth = MaxHealth;
-        Debug.Log($"[HealthSystem] Initialized CurrentHealth to MaxHealth: {CurrentHealth}");
     }
 
     public void SetCoinReward(BigInteger reward)
@@ -108,7 +106,6 @@ public class HealthSystem : MonoBehaviour
         if (CurrencyManager.Instance != null)
         {
             CurrencyManager.Instance.AddCoins(coinReward);
-            Debug.Log($"[HealthSystem] 코인 지급 완료: {coinReward}");
         }
 
         Destroy(gameObject);

@@ -19,10 +19,6 @@ public class RangedAttackSO : DefaultAttackSO
         if (BigInteger.TryParse(upgradeCostString, out BigInteger result))
         {
             upgradeCost = result;
-        }
-        else
-        {
-            Debug.LogWarning("유효하지 않은 BigInteger 값입니다.");
-        }
+        }        
     }
 }

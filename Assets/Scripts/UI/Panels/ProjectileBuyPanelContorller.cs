@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Numerics;
+using System;
 
 public class ProjectileBuyPanelController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class ProjectileBuyPanelController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI upgradeInfoText;
     [SerializeField] private Button purchaseButton;
     [SerializeField] private Button cancelButton;
+
+    public event Action<RangedAttackSO> OnSkillPurchased;
 
     private int currentUpgradeIndex = 1;
     private bool isAnimating = false;
@@ -76,13 +79,14 @@ public class ProjectileBuyPanelController : MonoBehaviour
             if (CurrencyManager.Instance.SpendCoins(nextUpgrade.upgradeCost))
             {
                 ProjectileManager.Instance.UpgradeProjectile(nextUpgrade);
+
+                OnSkillPurchased?.Invoke(nextUpgrade);
+
                 currentUpgradeIndex++;
                 UpdateUI();
-                Debug.Log("구매 완료! 남은 돈: " + CurrencyManager.Instance.GetCoinBalance());
             }
             else
             {
-                Debug.Log("돈이 부족합니다.");
                 StartCoroutine(PlayInsufficientFundsAnimation());
             }
         }

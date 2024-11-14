@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Numerics;
 
-public class CurrencyUIUpdater : MonoBehaviour
+public class CurrencyDisplay : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI uniqueCoinText;

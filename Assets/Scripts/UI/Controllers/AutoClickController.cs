@@ -1,5 +1,7 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class AutoClickController : MonoBehaviour
 {
@@ -7,8 +9,9 @@ public class AutoClickController : MonoBehaviour
     [SerializeField] private GameObject purchasePanel;
     [SerializeField] private Button buyButton;
     [SerializeField] private Button cancelButton;
-    [SerializeField] private int autoClickPrice = 100;
+    [SerializeField] private long autoClickPrice = 100000000;
     [SerializeField] private float clickInterval = 0.5f;
+    [SerializeField] private TextMeshProUGUI purchaseText;
 
     public ProjectileAttack projectileAttack;
     public PlayerAnimationController animationController;
@@ -17,6 +20,7 @@ public class AutoClickController : MonoBehaviour
     private bool isAutoClickActive = false;
     private float clickTimer = 0f;
     private Image buttonImage;
+    private bool isAnimating = false;
 
     private void Start()
     {
@@ -29,7 +33,8 @@ public class AutoClickController : MonoBehaviour
         cancelButton.onClick.AddListener(ClosePurchasePanel);
 
         UpdateButtonAppearance();
-        purchasePanel.SetActive(false);
+        UpdatePurchaseText();
+        UIManager.Instance.Hide(purchasePanel);
     }
 
     private void Update()
@@ -61,7 +66,8 @@ public class AutoClickController : MonoBehaviour
         }
         else
         {
-            purchasePanel.SetActive(true);
+            UIManager.Instance.Show(purchasePanel);
+            UpdatePurchaseText();
         }
     }
 
@@ -79,19 +85,48 @@ public class AutoClickController : MonoBehaviour
             {
                 isAutoClickPurchased = true;
                 UpdateButtonAppearance();
-                Debug.Log("오토클릭 구매 완료!");
                 ClosePurchasePanel();
             }
         }
         else
         {
-            Debug.Log("돈이 부족합니다.");
+            StartCoroutine(PlayInsufficientFundsAnimation());
         }
+    }
+
+    private IEnumerator PlayInsufficientFundsAnimation()
+    {
+        if (isAnimating) yield break;
+        isAnimating = true;
+
+        Color originalColor = buyButton.image.color;
+        Vector3 originalPosition = buyButton.transform.position;
+        string originalText = purchaseText.text;
+
+        buyButton.image.color = Color.red;
+        purchaseText.text = "코인이 부족합니다.";
+
+        float shakeDuration = 0.5f;
+        float shakeAmount = 5f;
+        float elapsed = 0f;
+
+        while (elapsed < shakeDuration)
+        {
+            buyButton.transform.position = originalPosition + Vector3.right * Mathf.Sin(elapsed * 50) * shakeAmount;
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        buyButton.transform.position = originalPosition;
+        buyButton.image.color = originalColor;
+        purchaseText.text = originalText;
+
+        isAnimating = false;
     }
 
     private void ClosePurchasePanel()
     {
-        purchasePanel.SetActive(false);
+        UIManager.Instance.Hide(purchasePanel);
     }
 
     private void UpdateButtonAppearance()
@@ -99,5 +134,21 @@ public class AutoClickController : MonoBehaviour
         Color color = buttonImage.color;
         color.a = isAutoClickPurchased ? 1f : 0.59f;
         buttonImage.color = color;
+    }
+
+    private void UpdatePurchaseText()
+    {
+        string formattedPrice = FormatCurrency(autoClickPrice);
+        purchaseText.text = $"자동으로 클릭하는 기능입니다.\n\n구매 비용은 {formattedPrice} 코인 입니다.\n\n클릭 속도는 변경 불가합니다.\n\n활성화 하시겠습니까? (영구)";
+    }
+
+    private string FormatCurrency(long amount)
+    {
+        if (amount >= 100000000)
+            return $"{amount / 100000000f:F1}억";
+        else if (amount >= 10000)
+            return $"{amount / 10000}만";
+        else
+            return amount.ToString();
     }
 }

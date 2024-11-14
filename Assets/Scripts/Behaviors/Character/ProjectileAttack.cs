@@ -33,11 +33,8 @@ public class ProjectileAttack : MonoBehaviour
         var attackData = ProjectileManager.Instance.GetCurrentProjectileData();
         if (attackData == null)
         {
-            Debug.LogError("Attack data is null.");
             return;
         }
-
-        Debug.Log($"Attempting to fire: BulletTag={attackData.bulletNameTag}, Projectiles={attackData.numberofProjectilesPerShot}");
 
         for (int i = 0; i < attackData.numberofProjectilesPerShot; i++)
         {
@@ -48,17 +45,14 @@ public class ProjectileAttack : MonoBehaviour
 
             if (projectile != null)
             {
-                projectile.GetComponent<ProjectileHandler>().Initialize(attackData);
+                projectile.GetComponent<ProjectileController>().Initialize(attackData);
                 Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+
                 if (rb != null)
                 {
                     rb.velocity = rotation * Vector2.right * attackData.speed;
                 }
-            }
-            else
-            {
-                Debug.LogError($"Failed to load projectile prefab with tag: {attackData.bulletNameTag}");
-            }
+            }            
         }
     }
 

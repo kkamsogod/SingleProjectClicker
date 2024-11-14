@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UIPanelManager : MonoBehaviour
+public class UIPanelController : MonoBehaviour
 {
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject storePanel;
@@ -61,24 +61,20 @@ public class UIPanelManager : MonoBehaviour
     private void OnPause()
     {
         Time.timeScale = 0;
-        Debug.Log("게임이 일시 정지되었습니다.");
     }
 
     private void OnResume()
     {
         Time.timeScale = 1;
-        Debug.Log("게임이 재개되었습니다.");
     }
 
     private void OnOpenShop()
     {
         Time.timeScale = 0;
-        Debug.Log("상점이 열렸습니다.");
     }
 
     private void OnCloseShop()
     {
         Time.timeScale = 1;
-        Debug.Log("상점이 닫혔습니다.");
     }
 }

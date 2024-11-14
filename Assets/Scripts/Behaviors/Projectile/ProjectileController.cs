@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ProjectileHandler : MonoBehaviour
+public class ProjectileController : MonoBehaviour
 {
     private float power;
     private float size;
@@ -40,7 +40,6 @@ public class ProjectileHandler : MonoBehaviour
                 targetHealth.ChangeHealth(-totalDamage);
             }
 
-            Debug.Log($"Hit {other.gameObject.name} with combined power {power} + player power");
             Destroy(gameObject);
         }
     }

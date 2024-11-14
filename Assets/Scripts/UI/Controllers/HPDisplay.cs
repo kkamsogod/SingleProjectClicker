@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HPSlider : MonoBehaviour
+public class HPDisplay : MonoBehaviour
 {
     [SerializeField] private Slider playerHealthSlider;
     [SerializeField] private Slider monsterHealthSlider;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StoreMenuManager : MonoBehaviour
+public class StoreUIController : MonoBehaviour
 {
     [Header("AttackSpeed")]
     [SerializeField] private Button attackSpeedUpgradeButton;

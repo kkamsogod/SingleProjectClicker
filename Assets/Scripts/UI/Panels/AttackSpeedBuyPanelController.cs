@@ -8,18 +8,19 @@ public class AttackSpeedBuyPanelController : MonoBehaviour
 {
     [SerializeField] private Button buyButton;
     [SerializeField] private Button cancelButton;
-    [SerializeField] private BigInteger itemPrice = new BigInteger(1000); // 초기 가격을 BigInteger로 설정
+    [SerializeField] private string itemPriceString = "10000";
     [SerializeField] private float attackSpeedIncrease = 0.2f;
     [SerializeField] private int maxClickCount = 50;
     [SerializeField] private TextMeshProUGUI upgradeInfoText;
 
     private CharacterStatHandler statHandler;
     private int currentClickCount = 0;
-
+    private BigInteger itemPrice;
     private bool isAnimating = false;
 
     private void Start()
     {
+        itemPrice = BigInteger.Parse(itemPriceString);
         buyButton.onClick.AddListener(AttemptPurchase);
         cancelButton.onClick.AddListener(ClosePanel);
 
@@ -46,10 +47,8 @@ public class AttackSpeedBuyPanelController : MonoBehaviour
         {
             if (CurrencyManager.Instance.SpendCoins(itemPrice))
             {
-                Debug.Log("구매 완료! 남은 돈: " + CurrencyManager.Instance.GetCoinBalance());
-
                 statHandler.UpgradeAttackSpeed(attackSpeedIncrease);
-                itemPrice *= 2; // BigInteger에 맞게 가격을 2배로 증가
+                itemPrice *= 2;
 
                 currentClickCount++;
                 UpdateUI();
@@ -57,14 +56,12 @@ public class AttackSpeedBuyPanelController : MonoBehaviour
             }
             else
             {
-                Debug.Log("돈이 부족합니다.");
                 StartCoroutine(PlayInsufficientFundsAnimation());
             }
         }
 
         if (currentClickCount >= maxClickCount)
         {
-            Debug.Log("최대 공속에 도달했습니다.");
             UpdateUI();
             UpdateBuyButtonStatus();
         }

@@ -71,6 +71,5 @@ public class GameManager : Singleton<GameManager>
     {
         monster = spawnedMonster;
         OnMonsterSpawned?.Invoke();
-        Debug.Log("[GameManager] Monster spawned and event triggered.");
     }
 }

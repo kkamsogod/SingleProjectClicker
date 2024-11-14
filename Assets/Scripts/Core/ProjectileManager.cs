@@ -24,7 +24,6 @@ public class ProjectileManager : Singleton<ProjectileManager>
         if (newProjectileData != null)
         {
             currentProjectileData = new RangedAttackRuntimeData(newProjectileData);
-            Debug.Log($"[ProjectileManager] Projectile upgraded to: {newProjectileData.name}");
         }
     }
 }
